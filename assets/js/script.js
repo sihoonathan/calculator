@@ -1,4 +1,4 @@
-function add (x, y) {
+/*function add (x, y) {
     return x + y;
 }
 
@@ -44,16 +44,28 @@ function divideArray (...numbers) {
         first /= num;
     }
     return first;
-}
+}*/
 // let screenBottom = document.querySelector("[data-key='screenBottom']");
+
+
+function removeTransition(e) {
+    console.log(this.className);
+
+    if (this.classList.contains('Enter')) {
+        this.classList.remove('enterPressed');
+        console.log('Inside Enter')
+    }
+    else {
+        this.classList.remove('keyPressed');
+        console.log('Inside Key')
+    }
+}
 
 const buttons = document.querySelectorAll('button');
 
 window.addEventListener('keydown', e => {
     const pressedKeyElem = document.querySelector(`[data-key="${e.key}"]`);
-
     const pressedEnter = document.querySelector('.Enter');
-
     if (!pressedKeyElem && !pressedEnter) return;
 
     if (e.key == "=" || e.key == "Enter") {
@@ -64,24 +76,20 @@ window.addEventListener('keydown', e => {
     }
 });
 
-console.log(buttons);
+function addClickEvent(e) {
+    if (this.classList.contains('Enter')) this.classList.add('enterPressed');
+    else this.classList.add('keyPressed');
+}
+
+/*buttons.forEach(button => {
+    button.addEventListener('click', addClickEvent)
+})*/
 
 buttons.forEach(button => {
-    console.log(button);
+    button.addEventListener('click', addClickEvent)
     button.addEventListener('transitionend', removeTransition);
 });
 
 
-function removeTransition(e) {
-    console.log(e);
-    console.log(this);
-
-    if (this.className == 'Enter') {
-        this.classList.remove('enterPressed');
-    }
-    else {
-        this.classList.remove('keyPressed');
-    }
-}
 
 
