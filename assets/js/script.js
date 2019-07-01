@@ -1,9 +1,9 @@
-/*function add (x, y) {
-    return x + y;
+function add (x, y) {
+    return Number(x) + Number(y);
 }
 
 function subtract (x, y) {
-    return x - y;
+    return Number(x) - Number(y);
 }
 
 function multiply (x, y) {
@@ -14,65 +14,228 @@ function divide (x, y) {
     return x / y;
 }
 
+
 function operate(operation, x, y) {
     return operation(x, y);
 }
 
-function sum (array) {
-    let arraySum = 0;
-
-    for(let i = 0; i < array.length; i++) {
-        arraySum += array[i];
+function calculate(wholeArray) {
+    for (let each of wholeArray) {
+        if (each == '*' || each == '/') {
+            let operatorIndex = wholeArray.indexOf(each)
+            let leftOperandIndex = operatorIndex - 1;
+            let rightOperandIndex = operatorIndex + 1;
+            let result = each == '*' ? multiply(wholeArray[leftOperandIndex], wholeArray[rightOperandIndex]) : divide(wholeArray[leftOperandIndex], wholeArray[rightOperandIndex]);
+            wholeArray.splice(leftOperandIndex, 3, result);
+        }
     }
 
-    return arraySum
+    while (true) {
+        let multiIndex = wholeArray.indexOf('*');
+        let divIndex = wholeArray.indexOf('/');
+        let operatorIndex;
+        let leftOperandIndex;
+        let rightOperandIndex;
+
+        if (multiIndex > 0 || divIndex > 0) {
+            if (multiIndex > 0 && divIndex > 0) {
+                operatorIndex = multiIndex < divIndex ? multiIndex : divIndex;
+                leftOperandIndex = operatorIndex - 1;
+                rightOperandIndex = operatorIndex + 1;
+            } else if (multiIndex > 0 && divIndex < 0) {
+                operatorIndex = multiIndex;
+                leftOperandIndex = operatorIndex - 1;
+                rightOperandIndex = operatorIndex + 1;
+            } else {
+                operatorIndex = divIndex;
+                leftOperandIndex = operatorIndex - 1;
+                rightOperandIndex = operatorIndex + 1;
+            }
+
+            let result = wholeArray[operatorIndex] == '*' ? multiply(wholeArray[leftOperandIndex], wholeArray[rightOperandIndex]) : divide(wholeArray[leftOperandIndex], wholeArray[rightOperandIndex]);
+
+            wholeArray.splice(leftOperandIndex, 3, result);
+        } else {
+            break;
+        }
+    }
+
+    while (true) {
+        let addIndex = wholeArray.indexOf('+');
+        let subtractIndex = wholeArray.indexOf('-');
+        let operatorIndex;
+        let leftOperandIndex;
+        let rightOperandIndex;
+
+        if (addIndex > 0 || subtractIndex > 0) {
+            if (addIndex > 0 && subtractIndex > 0) {
+                operatorIndex = addIndex < subtractIndex ? addIndex : subtractIndex;
+                leftOperandIndex = operatorIndex - 1;
+                rightOperandIndex = operatorIndex + 1;
+            } else if (addIndex > 0 && subtractIndex < 0) {
+                operatorIndex = addIndex;
+                leftOperandIndex = operatorIndex - 1;
+                rightOperandIndex = operatorIndex + 1;
+            } else {
+                operatorIndex = subtractIndex;
+                leftOperandIndex = operatorIndex - 1;
+                rightOperandIndex = operatorIndex + 1;
+            }
+
+            let result = wholeArray[operatorIndex] == '+' ? add(wholeArray[leftOperandIndex], wholeArray[rightOperandIndex]) : subtract(wholeArray[leftOperandIndex], wholeArray[rightOperandIndex]);
+
+            wholeArray.splice(leftOperandIndex, 3, result);
+        } else {
+            break;
+        }
+    }
+
+    return wholeArray[0];
 }
 
-function multiplyArray (array) {
-    let product = 1;
 
-    for(let i = 0; i < array.length; i++) {
-        product *= array[i];
-    }
 
-    return product;
-}
 
-function divideArray (...numbers) {
-    let first = numbers[0];
-    for (let num of numbers.slice(1)) {
-        first /= num;
-    }
-    return first;
-}*/
 // let screenBottom = document.querySelector("[data-key='screenBottom']");
 
 
 function removeTransition(e) {
-    console.log(this.className);
 
     if (this.classList.contains('Enter')) {
         this.classList.remove('enterPressed');
-        console.log('Inside Enter')
     }
     else {
         this.classList.remove('keyPressed');
-        console.log('Inside Key')
     }
 }
 
 const buttons = document.querySelectorAll('button');
 
-window.addEventListener('keydown', e => {
-    const pressedKeyElem = document.querySelector(`[data-key="${e.key}"]`);
-    const pressedEnter = document.querySelector('.Enter');
-    if (!pressedKeyElem && !pressedEnter) return;
+let inputList = [];
+let inputNum = /[0-9.]/g;
+let inputOperator = /[/*+\-]/g;
+let firstOperator = /[/*+]/g;
+let numQualifier = [];
+const keyableKeys = /[0-9./\*\+\-\n\=]/g;
+let displayedResult = false;
+let prevAnswer;
+let prevAnswerReset = false;
 
+function displayInput(key) {
+
+    const screenBottom = document.querySelector("[data-key='screenBottom'] span");
+
+/*else if (displayedResult == true && prevAnswer) {
+        let screenBottom = document.querySelector('[data-key="screenBottom"] span');
+        screenBottom.textContent = "";
+        displayedResult = false;*/
+
+    if (key.match(inputNum)) {
+
+        if (inputList.length > 0) {
+            // if (inputList[inputList.length-1] == '.' && key == '.') return;
+
+            if (numQualifier.includes('.') && key == '.' ) return;
+        }
+
+        if (prevAnswer && !prevAnswerReset) {
+            screenBottom.textContent = "";
+            prevAnswerReset = true;
+        }
+
+        screenBottom.textContent += key;
+        inputList.push(key);
+        numQualifier.push(key);
+    } else if (key.match(inputOperator)) {
+
+        /*if (key == '-' && inputList.length == 0) {
+            screenBottom.textContent = "-";
+            inputList.push(key);
+        }*/
+
+        if (inputList.length == 0 && key.match(firstOperator)) {
+            return;
+        }
+
+        else if (inputList[inputList.length - 1] == '.') {
+            return;
+        }
+
+        else if (inputList[inputList.length - 1].match(inputOperator)) {
+            return;
+        }
+
+        else {
+            screenBottom.textContent += " " + key + " ";
+            inputList.push(key);
+            numQualifier = [];
+        }
+    } else {
+        if (!inputList[inputList.length - 1].match(inputOperator) && inputList[inputList.length - 1] != '.') {
+            inputList = [];
+            numQualifier = [];
+            prevAnswerReset = false;
+            displayAbove();
+        }
+    }
+}
+
+let finalResult = 0;
+
+function displayResult() {
+    let screenBottom = document.querySelector("[data-key='screenBottom'] span");
+    screenBottom.textContent = finalResult;
+    displayedResult = true;
+}
+
+function displayAbove() {
+    const screenBottom = document.querySelector("[data-key='screenBottom'] span");
+    const screenTop = document.querySelector("[data-key='screenTop'] span");
+
+    screenTop.textContent = screenBottom.textContent + " =";
+
+    const numArray = screenTop.textContent.split(/[/" "*+\-=]/g).filter(Boolean);
+    const operatorArray = screenTop.textContent.match(inputOperator);
+
+    let maxPop = Math.max(numArray.length, operatorArray.length);
+
+    const wholeArray = [];
+
+    for (let i = 0; i < maxPop; i++) {
+        const numNext = numArray.shift();
+        const operatorNext = operatorArray.shift();
+
+        if (numNext) {
+            wholeArray.push(numNext);
+        }
+        if (operatorNext) {
+            wholeArray.push(operatorNext);
+        }
+    }
+
+    finalResult = Math.round(calculate(wholeArray) * 10**10) / 10**10;
+    prevAnswer = finalResult;
+
+    displayResult();
+}
+
+window.addEventListener('keydown', e => {
+    if (!e.key.match(keyableKeys) && e.key != 'Enter') return;
+
+    /*else if (displayedResult == true && prevAnswer) {
+        let screenBottom = document.querySelector('[data-key="screenBottom"] span');
+        screenBottom.textContent = "";
+        displayedResult = false;
+    }*/
     if (e.key == "=" || e.key == "Enter") {
+        const pressedEnter = document.querySelector('.Enter');
         pressedEnter.classList.add('enterPressed');
+        displayInput("=");
         // operate(); need to call this later
     } else {
-        pressedKeyElem.classList.add("keyPressed");
+        const pressedKeyElem = document.querySelector(`[data-key="${e.key}"]`);
+        pressedKeyElem.className += "keyPressed";
+        displayInput(e.key);
     }
 });
 
@@ -81,15 +244,17 @@ function addClickEvent(e) {
     else this.classList.add('keyPressed');
 }
 
-/*buttons.forEach(button => {
-    button.addEventListener('click', addClickEvent)
-})*/
-
 buttons.forEach(button => {
-    button.addEventListener('click', addClickEvent)
     button.addEventListener('transitionend', removeTransition);
+    button.addEventListener('click', addClickEvent)
 });
 
 
 
+// Exception cases:
+// 34 * 4332 / 2.3
+// 4322 / 2.3
+// 2 + 3.2
+// 123 * 3.4
+// 123 - 3.4
 

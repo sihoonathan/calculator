@@ -44,6 +44,10 @@ html, body {
     text-align: center;
 }
 
+/*.container div {
+    width: 100%;
+}*/
+
 .container {
     background-color: #282828;
 }
@@ -55,8 +59,6 @@ html, body {
     cursor: pointer;
     transition: all 0.07s ease;
 }
-
-
 
 .container button:hover {
     background-color: #FC461E;
@@ -70,8 +72,10 @@ html, body {
     grid-area: screenTop;
     color: #C2C2C2;
     align-self: end;
-    justify-self: end;
     padding: 5px;
+    text-align: right;
+    direction: rtl;
+    overflow: hidden;
 }
 
 
@@ -80,15 +84,22 @@ html, body {
     border-bottom: 2px solid white;
     color: #FFF8CD;
     align-self: end;
-    justify-self: end;
     padding: 5px;
+    text-align: right;
+    direction: rtl;
+    overflow: hidden;
 }
 
-/*[data-key="screenBottom"] span{
-    position: absolute;
-    bottom: 0;
-    right: 5px;
-}*/
+span {
+
+    direction: ltr;
+    unicode-bidi: bidi-override;
+    white-space: nowrap;
+}
+
+div {
+    width: 240px;
+}
 
 [data-key="clear"] {
     grid-area: clear;
