@@ -20,6 +20,8 @@ function operate(operation, x, y) {
 }
 
 function calculate(wholeArray) {
+
+
     for (let each of wholeArray) {
         if (each == '*' || each == '/') {
             let operatorIndex = wholeArray.indexOf(each)
@@ -147,34 +149,20 @@ function displayInput(key) {
         inputList.push(key);
         numQualifier.push(key);
     } else if (key.match(inputOperator)) {
-
+        if (prevAnswer && !prevAnswerReset) {
+            return;
+        }
         if (inputList.length == 0 && key.match(firstOperator)) {
             return;
         }
 
         else if (inputList.length > 0 && inputList[inputList.length-1].match(inputOperator) && (key.match(firstOperator) || inputList[inputList.length-1] == '-' && key == '-')) {
-            console.log(key);
             return;
         }
 
-        /*if (inputList.length == 0 && key == '-' || inputList[inputList.length-1].match(firstOperator) && key == '-') {
-            screenBottom.textContent += " " + key + " ";
-            inputList.push(key);
-            numQualifier = [];
-        }
-
-        else if (inputList.length == 0 && key.match(firstOperator)) {
-            return;
-        }
-*/
         else if (inputList[inputList.length - 1] == '.') {
             return;
         }
-
-
-       /* else if (inputList[inputList.length - 1].match(inputOperator)) {
-            return;
-        }*/
 
         else {
             screenBottom.textContent += " " + key + " ";
@@ -200,29 +188,37 @@ function displayResult() {
 }
 
 function displayAbove() {
+
     const screenBottom = document.querySelector("[data-key='screenBottom'] span");
     const screenTop = document.querySelector("[data-key='screenTop'] span");
 
+    let contentToSplit = screenBottom.textContent;
     screenTop.textContent = screenBottom.textContent + " =";
 
-    const numArray = screenTop.textContent.split(/[/" "*+\-=]/g).filter(Boolean);
-    const operatorArray = screenTop.textContent.match(inputOperator);
 
-    let maxPop = Math.max(numArray.length, operatorArray.length);
+    let splitted = contentToSplit.split(" ").filter(Boolean);
+    console.log(splitted);
 
-    const wholeArray = [];
+    if (splitted[0] == '-') {
+        let numToChange = splitted[1];
+        splitted.shift();
+        splitted[0] = String(Number(numToChange) * -1);
+    }
 
-    for (let i = 0; i < maxPop; i++) {
-        const numNext = numArray.shift();
-        const operatorNext = operatorArray.shift();
-
-        if (numNext) {
-            wholeArray.push(numNext);
+    let i = 0;
+    while (i < splitted.length-1) {
+        if (splitted[i] == '-' && splitted[i-1].match(firstOperator)) {
+            let newNegativeNum = splitted[i+1] * -1;
+            splitted.splice(i, 2, newNegativeNum);
+            i = 0;
         }
-        if (operatorNext) {
-            wholeArray.push(operatorNext);
+        else {
+            i++;
         }
     }
+
+    const wholeArray = splitted;
+
 
     finalResult = Math.round(calculate(wholeArray) * 10**10) / 10**10;
     prevAnswer = finalResult;
