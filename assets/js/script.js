@@ -149,8 +149,9 @@ function displayInput(key) {
         inputList.push(key);
         numQualifier.push(key);
     } else if (key.match(inputOperator)) {
-        if (prevAnswer && !prevAnswerReset) {
-            return;
+        if (prevAnswer && !prevAnswerReset && key=="-") {
+            screenBottom.textContent = "";
+            prevAnswerReset = true;
         }
         if (inputList.length == 0 && key.match(firstOperator)) {
             return;
