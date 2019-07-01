@@ -148,22 +148,33 @@ function displayInput(key) {
         numQualifier.push(key);
     } else if (key.match(inputOperator)) {
 
-        /*if (key == '-' && inputList.length == 0) {
-            screenBottom.textContent = "-";
-            inputList.push(key);
-        }*/
-
         if (inputList.length == 0 && key.match(firstOperator)) {
             return;
         }
 
+        else if (inputList.length > 0 && inputList[inputList.length-1].match(inputOperator) && (key.match(firstOperator) || inputList[inputList.length-1] == '-' && key == '-')) {
+            console.log(key);
+            return;
+        }
+
+        /*if (inputList.length == 0 && key == '-' || inputList[inputList.length-1].match(firstOperator) && key == '-') {
+            screenBottom.textContent += " " + key + " ";
+            inputList.push(key);
+            numQualifier = [];
+        }
+
+        else if (inputList.length == 0 && key.match(firstOperator)) {
+            return;
+        }
+*/
         else if (inputList[inputList.length - 1] == '.') {
             return;
         }
 
-        else if (inputList[inputList.length - 1].match(inputOperator)) {
+
+       /* else if (inputList[inputList.length - 1].match(inputOperator)) {
             return;
-        }
+        }*/
 
         else {
             screenBottom.textContent += " " + key + " ";
