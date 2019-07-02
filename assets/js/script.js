@@ -14,11 +14,6 @@ function divide (x, y) {
     return x / y;
 }
 
-
-function operate(operation, x, y) {
-    return operation(x, y);
-}
-
 function calculate(wholeArray) {
 
 
@@ -94,12 +89,6 @@ function calculate(wholeArray) {
 
     return wholeArray[0];
 }
-
-
-
-
-// let screenBottom = document.querySelector("[data-key='screenBottom']");
-
 
 function removeTransition(e) {
 
@@ -202,7 +191,6 @@ function displayAbove() {
 
 
     let splitted = contentToSplit.split(" ").filter(Boolean);
-    console.log(splitted);
 
     if (splitted[0] == '-') {
         let numToChange = splitted[1];
@@ -225,7 +213,7 @@ function displayAbove() {
     const wholeArray = splitted;
 
 
-    finalResult = Math.round(calculate(wholeArray) * 10**10) / 10**10;
+    finalResult = Math.round(calculate(wholeArray) * 10**5) / 10**5;
     prevAnswer = finalResult;
 
     displayResult();
@@ -234,16 +222,10 @@ function displayAbove() {
 window.addEventListener('keydown', e => {
     if (!e.key.match(keyableKeys) && e.key != 'Enter') return;
 
-    /*else if (displayedResult == true && prevAnswer) {
-        let screenBottom = document.querySelector('[data-key="screenBottom"] span');
-        screenBottom.textContent = "";
-        displayedResult = false;
-    }*/
     if (e.key == "=" || e.key == "Enter") {
         const pressedEnter = document.querySelector('.Enter');
         pressedEnter.classList.add('enterPressed');
         displayInput("=");
-        // operate(); need to call this later
     } else {
         const pressedKeyElem = document.querySelector(`[data-key="${e.key}"]`);
         pressedKeyElem.className += "keyPressed";
@@ -252,8 +234,17 @@ window.addEventListener('keydown', e => {
 });
 
 function addClickEvent(e) {
-    if (this.classList.contains('Enter')) this.classList.add('enterPressed');
-    else this.classList.add('keyPressed');
+    if (this.classList.contains('Enter')) {
+        this.classList.add('enterPressed');
+        displayInput("=");
+
+    }
+    else {
+
+        this.classList.add('keyPressed');
+        let key = this.getAttribute("data-key");
+        displayInput(key);
+    }
 }
 
 buttons.forEach(button => {
@@ -262,11 +253,4 @@ buttons.forEach(button => {
 });
 
 
-
-// Exception cases:
-// 34 * 4332 / 2.3
-// 4322 / 2.3
-// 2 + 3.2
-// 123 * 3.4
-// 123 - 3.4
 
