@@ -149,8 +149,12 @@ function displayInput(key) {
         inputList.push(key);
         numQualifier.push(key);
     } else if (key.match(inputOperator)) {
-        if (prevAnswer && !prevAnswerReset && key=="-") {
-            screenBottom.textContent = "";
+        if (prevAnswer && !prevAnswerReset && key.match(inputOperator)) {
+            screenBottom.textContent = prevAnswer;
+            screenBottom.textContent += " " + key + " ";
+            inputList.push(prevAnswer);
+            inputList.push(key);
+            numQualifier.push(key);
             prevAnswerReset = true;
         }
         if (inputList.length == 0 && key.match(firstOperator)) {
