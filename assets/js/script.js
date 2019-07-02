@@ -240,7 +240,6 @@ function addClickEvent(e) {
 
     }
     else {
-
         this.classList.add('keyPressed');
         let key = this.getAttribute("data-key");
         displayInput(key);
