@@ -111,6 +111,7 @@ const keyableKeys = /[0-9./\*\+\-\n\=]/g;
 let displayedResult = false;
 let prevAnswer;
 let prevAnswerReset = false;
+let counter = true;
 
 function displayInput(key) {
 
@@ -121,7 +122,11 @@ function displayInput(key) {
         screenBottom.textContent = "";
         displayedResult = false;*/
 
+    // console.log(prevAnswerReset);
+
     if (key.match(inputNum)) {
+
+        counter = true;
 
         if (inputList.length > 0) {
             // if (inputList[inputList.length-1] == '.' && key == '.') return;
@@ -164,11 +169,19 @@ function displayInput(key) {
             numQualifier = [];
         }
     } else {
-        if (!inputList[inputList.length - 1].match(inputOperator) && inputList[inputList.length - 1] != '.') {
+
+        console.log(prevAnswerReset);
+
+        if (key == "Backspace" && counter) {
+            screenBottom.textContent = screenBottom.textContent.slice(0, screenBottom.textContent.length-1);
+        }
+
+        else if (!inputList[inputList.length - 1].match(inputOperator) && inputList[inputList.length - 1] != '.') {
             inputList = [];
             numQualifier = [];
             prevAnswerReset = false;
             displayAbove();
+            counter = false;
         }
     }
 }
@@ -220,7 +233,7 @@ function displayAbove() {
 }
 
 window.addEventListener('keydown', e => {
-    if (!e.key.match(keyableKeys) && e.key != 'Enter') return;
+    if (!e.key.match(keyableKeys) && e.key != 'Enter' && e.key != "Backspace") return;
 
     if (e.key == "=" || e.key == "Enter") {
         const pressedEnter = document.querySelector('.Enter');
