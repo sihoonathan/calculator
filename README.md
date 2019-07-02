@@ -1,4 +1,4 @@
 # calculator
 Interactive web calculator
 
-![screenshot](screenshot.png)
+![screenshot](screenshot1.png)
