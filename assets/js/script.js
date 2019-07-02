@@ -116,13 +116,13 @@ let counter = true;
 function displayInput(key) {
 
     const screenBottom = document.querySelector("[data-key='screenBottom'] span");
+    const screenTop = document.querySelector("[data-key='screenTop'] span");
 
-/*else if (displayedResult == true && prevAnswer) {
-        let screenBottom = document.querySelector('[data-key="screenBottom"] span');
+    if (key == "clear") {
         screenBottom.textContent = "";
-        displayedResult = false;*/
-
-    // console.log(prevAnswerReset);
+        screenTop.textContent ="";
+        return;
+    }
 
     if (key.match(inputNum)) {
 
@@ -169,8 +169,6 @@ function displayInput(key) {
             numQualifier = [];
         }
     } else {
-
-        console.log(prevAnswerReset);
 
         if (key == "Backspace" && counter) {
             screenBottom.textContent = screenBottom.textContent.slice(0, screenBottom.textContent.length-1);
@@ -236,6 +234,7 @@ window.addEventListener('keydown', e => {
     if (!e.key.match(keyableKeys) && e.key != 'Enter' && e.key != "Backspace") return;
 
     if (e.key == "=" || e.key == "Enter") {
+        e.preventDefault();
         const pressedEnter = document.querySelector('.Enter');
         pressedEnter.classList.add('enterPressed');
         displayInput("=");
@@ -255,6 +254,7 @@ function addClickEvent(e) {
     else {
         this.classList.add('keyPressed');
         let key = this.getAttribute("data-key");
+        console.log(key);
         displayInput(key);
     }
 }
@@ -263,6 +263,4 @@ buttons.forEach(button => {
     button.addEventListener('transitionend', removeTransition);
     button.addEventListener('click', addClickEvent)
 });
-
-
 
