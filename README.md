@@ -1,5 +1,5 @@
-# Calculator(https://sihoonathan.github.io/calculator/)
-### Calculator Web App
+# Calculator 
+### Calculator Web App [View in Browser](https://sihoonathan.github.io/calculator/)
 
 ![screenshot](screenshot1.png)
 
