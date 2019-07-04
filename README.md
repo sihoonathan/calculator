@@ -3,5 +3,5 @@
 
 ![screenshot](screenshot1.png)
 
-- Supports both mouse and keyboard interface for users. 
+- Supports both mouse and keyboard inputs for users. 
 - Supports functionality to do calculations based on the operator precedence as well as just simple calculations. 
